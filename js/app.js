@@ -105,6 +105,7 @@ class UI {
     this.expenseList.appendChild(div);
   }
 
+  // totalExpense
   totalExpense() {
     let total = 0;
     if (this.itemList.length > 0) {
@@ -115,6 +116,44 @@ class UI {
     }
     this.expenseAmount.textContent = total;
     return total;
+  }
+
+  // edit expense
+  editExpense(element) {
+    let id = parseInt(element.dataset.id);
+    let parent = element.parentElement.parentElement.parentElement;
+    // remove from dom
+    this.expenseList.removeChild(parent);
+    // remove from the list
+    let expense = this.itemList.filter(function(item) {
+      return item.id === id;
+    });
+
+    // show the value
+    this.expenseInput.value = expense[id].title;
+    this.amountInput.value = expense[id].amount;
+    // remove from list
+    let tempList = this.itemList.filter(function(item) {
+      return item.id !== id;
+    })
+    this.itemList =tempList;
+    this.showBalance()
+  }
+
+  // delete expense
+  deleteExpense(element) {
+    let id = parseInt(element.dataset.id);
+    let parent = element.parentElement.parentElement.parentElement;
+    // remove from dom
+    this.expenseList.removeChild(parent);
+    // remove from the list
+    let tempList = this.itemList.filter(function(item) {
+      return item.id !== id;
+    });
+
+  
+    this.itemList =tempList;
+    this.showBalance()
   }
 }
 
@@ -141,9 +180,9 @@ function eventListeners() {
     event.preventDefault();
     if (event.target.parentElement.classList.contains('edit-icon')) {
       ui.editExpense(event.target.parentElement);
-    } else if (event.target.parentElement.classList.contains('delete-icon')){
+    } else if (event.target.parentElement.classList.contains('delete-icon')) {
       ui.deleteExpense(event.target.parentElement);
-    } 
+    }
   });
 }
 
