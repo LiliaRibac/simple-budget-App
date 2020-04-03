@@ -130,14 +130,14 @@ class UI {
     });
 
     // show the value
-    this.expenseInput.value = expense[id].title;
-    this.amountInput.value = expense[id].amount;
+    this.expenseInput.value = expense[0].title;
+    this.amountInput.value = expense[0].amount;
     // remove from list
     let tempList = this.itemList.filter(function(item) {
       return item.id !== id;
-    })
-    this.itemList =tempList;
-    this.showBalance()
+    });
+    this.itemList = tempList;
+    this.showBalance();
   }
 
   // delete expense
@@ -151,9 +151,8 @@ class UI {
       return item.id !== id;
     });
 
-  
-    this.itemList =tempList;
-    this.showBalance()
+    this.itemList = tempList;
+    this.showBalance();
   }
 }
 
