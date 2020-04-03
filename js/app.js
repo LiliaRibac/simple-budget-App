@@ -27,17 +27,86 @@ class UI {
       setTimeout(function() {
         self.budgetFeedback.classList.remove('showItem');
       }, 3000);
-    }
-    else{
-      this.budgetFeedback.textContent= value;
-      this.budgetInput.value=""
-      this.showBalance()
+    } else {
+      this.budgetAmount.textContent = value;
+      this.budgetInput.value = '';
+      this.showBalance();
     }
   }
 
   // show balance
-  showBalance(){
-    console.log(`hey I'm this keyword`)
+  showBalance() {
+    const expense = this.totalExpense();
+    console.log(expense);
+    const total = parseInt(this.budgetAmount.textContent) - expense;
+    this.balanceAmount.textContent = total;
+    console.log(total);
+    if (total < 0) {
+      this.balance.classList.remove('showGreen', 'showBlack');
+      this.balance.classList.add('showRed');
+    } else if (total > 0) {
+      this.balance.classList.remove('showRed', 'showBlack');
+      this.balance.classList.add('showGreen');
+    } else if (total === 0) {
+      this.balance.classList.remove('showGreen', 'showRed');
+      this.balance.classList.add('showBlack');
+    }
+  }
+
+  // submit expence form
+  submitExpenseForm() {
+    const expenseValue = this.expenseInput.value;
+    const amountValue = this.amountInput.value;
+    if (expenseValue === '' || amountValue === '' || amountValue < 0) {
+      this.budgetFeedback.classList.add('showItem');
+      this.budgetFeedback.innerHTML = `<p> value cannot be empty or negative`;
+
+      const self = this;
+      setTimeout(function() {
+        self.budgetFeedback.classList.remove('showItme');
+      }, 3000);
+    } else {
+      let amount = parseInt(amountValue);
+      this.expenseInput= '';
+      this.amountInput = '';
+
+      let expense = {
+        id: this.itemID,
+        title: expenseValue,
+        amount: amount
+      };
+      this.itemID++;
+      this.itemList.push(expense);
+      this.addExpense(expense);
+      // show balance
+    }
+  }
+
+  addExpense(expense) {
+    const div = document.createElement('div');
+    div.classList.add('expense');
+    div.innerHTML = ` <div class="expense-item d-flex justify-content-between align-items-baseline">
+
+    <h6 class="expense-title mb-0 text-uppercase list-item">- ${expense.title}</h6>
+    <h5 class="expense-amount mb-0 list-item">${expense.amount}</h5>
+
+    <div class="expense-icons list-item">
+
+     <a href="#" class="edit-icon mx-2" data-id="${expense.id}">
+      <i class="fas fa-edit"></i>
+     </a>
+     <a href="#" class="delete-icon" data-id="${expense.id}">
+      <i class="fas fa-trash"></i>
+     </a>
+    </div>
+   </div>`;
+
+   this.expenseList.appendChild(div)
+  }
+
+  totalExpense() {
+    let total = 400;
+    return total;
   }
 }
 
@@ -56,6 +125,7 @@ function eventListeners() {
   // buddget for expense
   expenseForm.addEventListener('submit', function(event) {
     event.preventDefault();
+    ui.submitExpenseForm();
   });
   // expence click
   expenseList.addEventListener('click', function(event) {
