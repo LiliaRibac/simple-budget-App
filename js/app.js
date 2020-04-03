@@ -67,8 +67,8 @@ class UI {
       }, 3000);
     } else {
       let amount = parseInt(amountValue);
-      this.expenseInput= '';
-      this.amountInput = '';
+      this.expenseInput.value = '';
+      this.amountInput.value = '';
 
       let expense = {
         id: this.itemID,
@@ -78,6 +78,7 @@ class UI {
       this.itemID++;
       this.itemList.push(expense);
       this.addExpense(expense);
+      this.showBalance();
       // show balance
     }
   }
@@ -101,11 +102,18 @@ class UI {
     </div>
    </div>`;
 
-   this.expenseList.appendChild(div)
+    this.expenseList.appendChild(div);
   }
 
   totalExpense() {
-    let total = 400;
+    let total = 0;
+    if (this.itemList.length > 0) {
+      total = this.itemList.reduce(function(acc, curr) {
+        acc += curr.amount;
+        return acc;
+      }, 0);
+    }
+    this.expenseAmount.textContent = total;
     return total;
   }
 }
@@ -117,6 +125,7 @@ function eventListeners() {
 
   // new instanse of UI CLASS
   const ui = new UI();
+
   // buddget for submit
   budgetForm.addEventListener('submit', function(event) {
     event.preventDefault();
@@ -130,6 +139,11 @@ function eventListeners() {
   // expence click
   expenseList.addEventListener('click', function(event) {
     event.preventDefault();
+    if (event.target.parentElement.classList.contains('edit-icon')) {
+      ui.editExpense(event.target.parentElement);
+    } else if (event.target.parentElement.classList.contains('delete-icon')){
+      ui.deleteExpense(event.target.parentElement);
+    } 
   });
 }
 
